@@ -4,7 +4,7 @@
 #include <stack>
 using namespace std;
 
-const int SIZE = 9;
+const int SIZE = 5;
 
 struct Edge {
     int src, dest, weight;
@@ -89,30 +89,186 @@ public:
         }
         cout << endl;
     }
+
+        void dijkstra(int start) {
+        vector<int> dist(SIZE, INT_MAX);
+        priority_queue<Pair, vector<Pair>, greater<Pair>> pq;
+
+        dist[start] = 0;
+        pq.push({0, start});
+
+        while (!pq.empty()) {
+            int current = pq.top().second;
+            pq.pop();
+
+            for (auto &edge : adjList[current]) {
+                int neighbor = edge.first;
+                int weight = edge.second;
+
+                if (dist[current] + weight < dist[neighbor]) {
+                    dist[neighbor] = dist[current] + weight;
+                    pq.push({dist[neighbor], neighbor});
+                }
+            }
+        }
+
+        cout << "Shortest travel times from station " << start << ":\n";
+        for (int i = 0; i < SIZE; i++) {
+            cout << "→ To station " << i << " = " << dist[i] << " minutes\n";
+        }
+        cout << endl;
+    }
+
+        void minimumSpanningTree(int start) {
+        vector<int> key(SIZE, INT_MAX);
+        vector<int> parent(SIZE, -1);
+        vector<bool> inMST(SIZE, false);
+
+        key[start] = 0;
+
+        for (int i = 0; i < SIZE - 1; i++) {
+
+            int u = -1;
+            int minKey = INT_MAX;
+
+            for (int v = 0; v < SIZE; v++) {
+                if (!inMST[v] && key[v] < minKey) {
+                    minKey = key[v];
+                    u = v;
+                }
+            }
+
+            if (u == -1) break;
+
+            inMST[u] = true;
+
+            for (int j = 0; j < adjList[u].size(); j++) {
+                int neighbor = adjList[u][j].first;
+                int weight = adjList[u][j].second;
+
+                if (!inMST[neighbor] && weight < key[neighbor]) {
+                    key[neighbor] = weight;
+                    parent[neighbor] = u;
+                }
+            }
+        }
+
+        cout << "\nMinimum Spanning Tree edges:\n";
+        for (int i = 0; i < SIZE; i++) {
+            if (parent[i] != -1) {
+                cout << "Edge from " << parent[i]
+                     << " to " << i
+                     << " with capacity: " << key[i]
+                     << " units\n";
+            }
+        }
+        cout << endl;
+    }
+
 };
- 
+
+void printTransitNetwork(const Graph &graph, const vector<string> &names) {
+    cout << " City Transit Network Topology:\n";
+    cout << "=================================\n";
+
+    for (int i = 0; i < (int)graph.adjList.size(); ++i) {
+        cout << "From station " << i << " (" << names[i] << "):\n";
+
+        for (auto &edge : graph.adjList[i]) {
+            int neighbor = edge.first;
+            int weight = edge.second;
+
+            cout << "   → To station " << neighbor 
+                 << " (" << names[neighbor] << ") "
+                 << " - Travel time: " << weight << " minutes\n";
+        }
+        cout << endl;
+    }
+} 
     int main() {
 
-vector<Edge> edges = {
-// (x, y, w) —> edge from x to y having weight w
-   {0,1,8}, {0,2,21},
-    {1,2,6}, {1,3,5}, {1,4,4},
-    {2,7,11}, {2,8,8},
-    {3,4,9},
-    {5,6,10},
-    {5,7,15}, {5,8,5},
-    {6,7,3}, {6,8,7},
-    {7,8,2}
+    vector<string> names = {
+    "Downtown",
+    "Airport",
+    "University",
+    "Central Park",
+    "City Mall"
 };
+
+
+ Edge edgeArray[]  = {
+// (x, y, w) —> edge from x to y having weight w
+    {0, 1, 15},  // Downtown → Airport
+    {0, 2, 10},  // Downtown → University
+    {1, 3, 12},  // Airport → Central Park
+    {2, 3, 5},   // University → Central Park
+    {3, 4, 8}    // Central Park → City Mall
+};
+
+ vector<Edge> edges(edgeArray, edgeArray + 5);
+
 
 // Creates graph
 Graph graph(edges);
 
-graph.printGraph();
-    cout << endl;
+   int choice;
+do {
+    cout << "\nWater Distribution Network Menu:\n";
+    cout << "[1] Display water distribution network\n";
+    cout << "[2] Check contaminant spread (BFS)\n";
+    cout << "[3] Plan inspection route (DFS)\n";
+    cout << "[4] Calculate shortest paths\n";
+    cout << "[5] Find Minimum Spanning Tree\n";
+    cout << "[0] Exit\n";
+    cout << "Enter your choice: ";
+    cin >> choice;
 
-    graph.DFS(0);
-    graph.BFS(0);
+    switch (choice) {
+        case 1:
+            printTransitNetwork(graph, names);
+            break;
+
+        case 2: {
+            int start;
+            cout << "Enter starting station for BFS: ";
+            cin >> start;
+            graph.BFS(start);
+            break;
+        }
+
+        case 3: {
+            int start;
+            cout << "Enter starting station for DFS: ";
+            cin >> start;
+            graph.DFS(start);
+            break;
+        }
+
+        case 4: {
+            int start;
+            cout << "Enter starting station for Dijkstra: ";
+            cin >> start;
+            graph.dijkstra(start);
+            break;
+        }
+
+        case 5: {
+            int start;
+            cout << "Enter starting station for MST: ";
+            cin >> start;
+            graph.minimumSpanningTree(start);
+            break;
+        }
+
+        case 0:
+            cout << "Exiting...\n";
+            break;
+
+        default:
+            cout << "Invalid choice. Try again.\n";
+    }
+
+} while (choice != 0);
 
 return 0;
 }

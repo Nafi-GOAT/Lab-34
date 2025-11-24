@@ -211,17 +211,64 @@ void printTransitNetwork(const Graph &graph, const vector<string> &names) {
 // Creates graph
 Graph graph(edges);
 
-    graph.printGraph();
-    cout << endl;
+   int choice;
+do {
+    cout << "\nWater Distribution Network Menu:\n";
+    cout << "[1] Display water distribution network\n";
+    cout << "[2] Check contaminant spread (BFS)\n";
+    cout << "[3] Plan inspection route (DFS)\n";
+    cout << "[4] Calculate shortest paths\n";
+    cout << "[5] Find Minimum Spanning Tree\n";
+    cout << "[0] Exit\n";
+    cout << "Enter your choice: ";
+    cin >> choice;
 
-    graph.DFS(0);
-    graph.BFS(0);
-    cout << endl;
+    switch (choice) {
+        case 1:
+            printTransitNetwork(graph, names);
+            break;
 
-    printTransitNetwork(graph, names);
-    graph.dijkstra(0);
+        case 2: {
+            int start;
+            cout << "Enter starting station for BFS: ";
+            cin >> start;
+            graph.BFS(start);
+            break;
+        }
 
-    graph.minimumSpanningTree(0);
+        case 3: {
+            int start;
+            cout << "Enter starting station for DFS: ";
+            cin >> start;
+            graph.DFS(start);
+            break;
+        }
+
+        case 4: {
+            int start;
+            cout << "Enter starting station for Dijkstra: ";
+            cin >> start;
+            graph.dijkstra(start);
+            break;
+        }
+
+        case 5: {
+            int start;
+            cout << "Enter starting station for MST: ";
+            cin >> start;
+            graph.minimumSpanningTree(start);
+            break;
+        }
+
+        case 0:
+            cout << "Exiting...\n";
+            break;
+
+        default:
+            cout << "Invalid choice. Try again.\n";
+    }
+
+} while (choice != 0);
 
 return 0;
 }
