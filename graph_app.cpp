@@ -27,6 +27,45 @@ public:
             adjList[dest].push_back(make_pair(src, weight)); // undirected
         }
     }
+
+        void printGraph() {
+        cout << "Graph's adjacency list:\n";
+        for (int i = 0; i < adjList.size(); i++) {
+            cout << i << " --> ";
+            for (Pair v : adjList[i])
+                cout << "(" << v.first << ", " << v.second << ") ";
+            cout << endl;
+        }
+    }
+
+    void DFS(int start){
+        vector<bool> visited(SIZE, false);
+        stack<int> s;
+
+        s.push(start);
+
+        cout << "DFS Traversal starting from vertex " << start << " : ";
+
+                while (!s.empty()) {
+            int node = s.top();
+            s.pop();
+
+            if (!visited[node]) {
+                visited[node] = true;
+                cout << node << " ";
+
+                 for (int i = adjList[node].size() - 1; i >= 0; i--) {
+                    int neighbor = adjList[node][i].first;
+                    if (!visited[neighbor])
+                        s.push(neighbor);
+                }
+            }
+        }
+        cout << endl;
+     }
+
+    }
+};
  
     int main() {
 // Creates a vector of graph edges/weights
