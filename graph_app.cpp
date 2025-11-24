@@ -4,7 +4,7 @@
 #include <stack>
 using namespace std;
 
-const int SIZE = 9;
+const int SIZE = 5;
 
 struct Edge {
     int src, dest, weight;
@@ -90,20 +90,48 @@ public:
         cout << endl;
     }
 };
+
+void printTransitNetwork(const Graph &graph, const vector<string> &names) {
+    cout << " City Transit Network Topology:\n";
+    cout << "=================================\n";
+
+    for (int i = 0; i < (int)graph.adjList.size(); ++i) {
+        cout << "From station " << i << " (" << names[i] << "):\n";
+
+        for (auto &edge : graph.adjList[i]) {
+            int neighbor = edge.first;
+            int weight = edge.second;
+
+            cout << "   → To station " << neighbor 
+                 << " (" << names[neighbor] << ") "
+                 << " - Travel time: " << weight << " minutes\n";
+        }
+        cout << endl;
+    }
+}
  
     int main() {
 
+    vector<string> names = {
+    "Downtown",
+    "Airport",
+    "University",
+    "Central Park",
+    "City Mall"
+};
+
+
 vector<Edge> edges = {
 // (x, y, w) —> edge from x to y having weight w
-   {0,1,8}, {0,2,21},
-    {1,2,6}, {1,3,5}, {1,4,4},
-    {2,7,11}, {2,8,8},
-    {3,4,9},
-    {5,6,10},
-    {5,7,15}, {5,8,5},
-    {6,7,3}, {6,8,7},
-    {7,8,2}
+    {0, 1, 15},  // Downtown → Airport
+    {0, 2, 10},  // Downtown → University
+    {1, 3, 12},  // Airport → Central Park
+    {2, 3, 5},   // University → Central Park
+    {3, 4, 8}    // Central Park → City Mall
 };
+
+
+
 
 // Creates graph
 Graph graph(edges);
@@ -113,6 +141,9 @@ graph.printGraph();
 
     graph.DFS(0);
     graph.BFS(0);
+
+    cout << endl;
+    printTransitNetwork(graph, names);
 
 return 0;
 }
