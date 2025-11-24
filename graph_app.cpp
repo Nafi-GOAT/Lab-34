@@ -91,6 +91,28 @@ public:
     }
 };
 
+ void dijkstra(int start) {
+        vector<int> dist(SIZE, INT_MAX);
+        priority_queue<Pair, vector<Pair>, greater<Pair>> pq;
+
+        dist[start] = 0;
+        pq.push({0, start});
+
+        while(!pq.empty()) {
+            int current = pq.top().second;
+            pq.pop();
+
+            for(auto &edge : adjList[current]) {
+                int neighbor = edge.first;
+                int weight = edge.second;
+
+                if(dist[current] + weight < dist[neighbor]) {
+                    dist[neighbor] = dist[current] + weight;
+                    pq.push({dist[neighbor], neighbor});
+                }
+            }
+        }
+
 void printTransitNetwork(const Graph &graph, const vector<string> &names) {
     cout << " City Transit Network Topology:\n";
     cout << "=================================\n";
@@ -108,6 +130,7 @@ void printTransitNetwork(const Graph &graph, const vector<string> &names) {
         }
         cout << endl;
     }
+    
 }
  
     int main() {
