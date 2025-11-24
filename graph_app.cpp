@@ -195,7 +195,6 @@ void printTransitNetwork(const Graph &graph, const vector<string> &names) {
     "City Mall"
 };
 
- vector<string> names(nameArray, nameArray + SIZE);
 
  Edge edgeArray[]  = {
 // (x, y, w) —> edge from x to y having weight w
