@@ -64,19 +64,44 @@ public:
         cout << endl;
      }
 
+      void BFS(int start) {
+        vector<bool> visited(SIZE, false);
+        queue<int> q;
+
+        visited[start] = true;
+        q.push(start);
+
+        cout << "BFS starting from vertex " << start << ": ";
+
+        while (q.empty()) {
+            int node = q.front();
+            q.pop();
+
+            cout << node << " ";
+
+            for (auto &edge : adjList[node]) {
+                int neighbor = edge.first;
+                if (!visited[neighbor]) {
+                    visited[neighbor] = true;
+                    q.pop(neighbor);
+                }
+            }
+        }
+        cout << endl;
     }
 };
  
     int main() {
-// Creates a vector of graph edges/weights
+
 vector<Edge> edges = {
 // (x, y, w) —> edge from x to y having weight w
 {0,1,12},{0,2,8},{0,3,21},{2,3,6},{2,6,2},{5,6,6},{4,5,9},{2,4,4},{2,5,5}
 };
 // Creates graph
 Graph graph(edges);
-// Prints adjacency list representation of graph
+
 graph.printGraph();
+
 return 0;
 }
    
