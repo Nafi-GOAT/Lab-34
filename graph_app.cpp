@@ -119,6 +119,52 @@ public:
         cout << endl;
     }
 
+        void minimumSpanningTree(int start) {
+        vector<int> key(SIZE, INT_MAX);
+        vector<int> parent(SIZE, -1);
+        vector<bool> inMST(SIZE, false);
+
+        key[start] = 0;
+
+        for (int i = 0; i < SIZE - 1; i++) {
+
+            int u = -1;
+            int minKey = INT_MAX;
+
+            for (int v = 0; v < SIZE; v++) {
+                if (!inMST[v] && key[v] < minKey) {
+                    minKey = key[v];
+                    u = v;
+                }
+            }
+
+            if (u == -1) break;
+
+            inMST[u] = true;
+
+            for (int j = 0; j < adjList[u].size(); j++) {
+                int neighbor = adjList[u][j].first;
+                int weight = adjList[u][j].second;
+
+                if (!inMST[neighbor] && weight < key[neighbor]) {
+                    key[neighbor] = weight;
+                    parent[neighbor] = u;
+                }
+            }
+        }
+
+        cout << "\nMinimum Spanning Tree edges:\n";
+        for (int i = 0; i < SIZE; i++) {
+            if (parent[i] != -1) {
+                cout << "Edge from " << parent[i]
+                     << " to " << i
+                     << " with capacity: " << key[i]
+                     << " units\n";
+            }
+        }
+        cout << endl;
+    }
+
 };
 
 void printTransitNetwork(const Graph &graph, const vector<string> &names) {
@@ -149,8 +195,9 @@ void printTransitNetwork(const Graph &graph, const vector<string> &names) {
     "City Mall"
 };
 
+ vector<string> names(nameArray, nameArray + SIZE);
 
-vector<Edge> edges = {
+ Edge edgeArray[]  = {
 // (x, y, w) —> edge from x to y having weight w
     {0, 1, 15},  // Downtown → Airport
     {0, 2, 10},  // Downtown → University
@@ -159,21 +206,23 @@ vector<Edge> edges = {
     {3, 4, 8}    // Central Park → City Mall
 };
 
-
+ vector<Edge> edges(edgeArray, edgeArray + 5);
 
 
 // Creates graph
 Graph graph(edges);
 
-graph.printGraph();
+    graph.printGraph();
     cout << endl;
 
     graph.DFS(0);
     graph.BFS(0);
-
     cout << endl;
+
     printTransitNetwork(graph, names);
     graph.dijkstra(0);
+
+    graph.minimumSpanningTree(0);
 
 return 0;
 }
