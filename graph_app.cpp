@@ -73,7 +73,7 @@ public:
 
         cout << "BFS starting from vertex " << start << ": ";
 
-        while (q.empty()) {
+        while (!q.empty()) {
             int node = q.front();
             q.pop();
 
@@ -83,7 +83,7 @@ public:
                 int neighbor = edge.first;
                 if (!visited[neighbor]) {
                     visited[neighbor] = true;
-                    q.pop(neighbor);
+                    q.push(neighbor);
                 }
             }
         }
@@ -101,6 +101,10 @@ vector<Edge> edges = {
 Graph graph(edges);
 
 graph.printGraph();
+    cout << endl;
+
+    graph.DFS(0);
+    graph.BFS(0);
 
 return 0;
 }
