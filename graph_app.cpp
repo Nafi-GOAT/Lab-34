@@ -89,29 +89,37 @@ public:
         }
         cout << endl;
     }
-};
 
- void dijkstra(int start) {
+        void dijkstra(int start) {
         vector<int> dist(SIZE, INT_MAX);
         priority_queue<Pair, vector<Pair>, greater<Pair>> pq;
 
         dist[start] = 0;
         pq.push({0, start});
 
-        while(!pq.empty()) {
+        while (!pq.empty()) {
             int current = pq.top().second;
             pq.pop();
 
-            for(auto &edge : adjList[current]) {
+            for (auto &edge : adjList[current]) {
                 int neighbor = edge.first;
                 int weight = edge.second;
 
-                if(dist[current] + weight < dist[neighbor]) {
+                if (dist[current] + weight < dist[neighbor]) {
                     dist[neighbor] = dist[current] + weight;
                     pq.push({dist[neighbor], neighbor});
                 }
             }
         }
+
+        cout << "Shortest travel times from station " << start << ":\n";
+        for (int i = 0; i < SIZE; i++) {
+            cout << "→ To station " << i << " = " << dist[i] << " minutes\n";
+        }
+        cout << endl;
+    }
+
+};
 
 void printTransitNetwork(const Graph &graph, const vector<string> &names) {
     cout << " City Transit Network Topology:\n";
@@ -130,9 +138,7 @@ void printTransitNetwork(const Graph &graph, const vector<string> &names) {
         }
         cout << endl;
     }
-    
-}
- 
+} 
     int main() {
 
     vector<string> names = {
@@ -167,6 +173,7 @@ graph.printGraph();
 
     cout << endl;
     printTransitNetwork(graph, names);
+    graph.dijkstra(0);
 
 return 0;
 }
